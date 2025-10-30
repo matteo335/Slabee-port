@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:yellow_concrete_powder"
-    }
+    "#": [
+       "minecraft:yellow_concrete_powder"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:yellow_concrete_powder_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:magenta_concrete_vertical_slab"
-    }
+    "#": [
+       "slabee:magenta_concrete_vertical_slab"
+    ]
   },
   "pattern": [
     "##"
@@ -12,5 +12,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:magenta_concrete"
-  }
+  },
+  "show_notification": false
 }

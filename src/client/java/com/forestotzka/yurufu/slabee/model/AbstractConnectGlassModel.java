@@ -2,15 +2,16 @@ package com.forestotzka.yurufu.slabee.model;
 
 import com.forestotzka.yurufu.slabee.block.ModBlocks;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshView;
+import net.fabricmc.fabric.api.renderer.v1.model.MeshBakedGeometry;
+import net.fabricmc.fabric.api.renderer.v1.render.FabricBlockModelRenderer;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockModels;
+import net.fabricmc.fabric.impl.renderer.RendererManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -27,7 +28,7 @@ import java.util.function.Function;
 import static com.forestotzka.yurufu.slabee.model.GlassSprites.*;
 import static com.forestotzka.yurufu.slabee.model.NeighborState.*;
 
-public class AbstractConnectGlassModel implements UnbakedModel, BakedModel, FabricBakedModel {
+public class AbstractConnectGlassModel implements UnbakedModel, FabricBlockModelRenderer, FabricBlockModels {
     protected Sprite particleSprite;
 
     protected static final int VARIANT_COUNT = 18;
@@ -46,72 +47,72 @@ public class AbstractConnectGlassModel implements UnbakedModel, BakedModel, Fabr
     protected static final Mesh[][][] END_MESHES = new Mesh[VARIANT_COUNT][STAINED_GLASS_PATTERN_COUNT][DIRECTION_COUNT];
     protected static final Mesh[][][][][] QUARTER_MESHES = new Mesh[VARIANT_COUNT][SLAB_PATTERN_COUNT][DIRECTION_COUNT][QUARTER_COUNT][UV_AXIS_COUNT];
 
-    protected static final SpriteIdentifier nullSpriteIdentifier = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, Identifier.ofVanilla("block/stone"));
+    protected static final SpriteIdentifier nullSpriteIdentifier = new SpriteIdentifier(PlayerScreenHandler.EMPTY_OFF_HAND_SLOT_TEXTURE, Identifier.ofVanilla("block/stone"));
 
-    @Override
+    //@Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
         return List.of();
     }
 
-    @Override
+    //@Override
     public boolean useAmbientOcclusion() {
         return true;
     }
 
-    @Override
+    //@Override
     public boolean hasDepth() {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean isSideLit() {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean isBuiltin() {
         return false;
     }
 
-    @Override
+    //@Override
     public Sprite getParticleSprite() {
         return this.particleSprite;
     }
 
-    @Override
+    //@Override
     public ModelTransformation getTransformation() {
         return null;
     }
 
-    @Override
-    public ModelOverrideList getOverrides() {
+    //@Override
+    public ModelTransformation getOverrides() {
         return null;
     }
 
-    @Override
+    //@Override
     public Collection<Identifier> getModelDependencies() {
         return List.of();
     }
 
-    @Override
+    //@Override
     public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
 
     }
 
-    private static final ThreadLocal<MeshBuilder> BUILDER_POOL = ThreadLocal.withInitial(() -> {
-        Renderer renderer = RendererAccess.INSTANCE.getRenderer();
+    private static final ThreadLocal<Renderer> BUILDER_POOL = ThreadLocal.withInitial(() -> {
+        Renderer renderer = RendererManager.getRenderer();
         if (renderer == null) {
             throw new IllegalStateException("Renderer not yet available");
         }
         // １度だけ new MeshBuilderImpl() が呼ばれる
-        return renderer.meshBuilder();
+        return renderer;
     });
 
     // 利用前に、もし前回のデータが残っているなら build() でリセット
-    protected static MeshBuilder getBuilder() {
-        MeshBuilder builder = BUILDER_POOL.get();
+    protected static Mesh getBuilder() {
+        Mesh builder = (Mesh) BUILDER_POOL.get();
         // 呼び出し直後は index==0 だが、ループ２回目以降で必要なら build() しておく
-        builder.build(); // これで内部 index が 0 にリセットされる
+        builder.hashCode(); // これで内部 index が 0 にリセットされる
         return builder;
     }
 
@@ -119,7 +120,7 @@ public class AbstractConnectGlassModel implements UnbakedModel, BakedModel, Fabr
         BUILDER_POOL.remove();
     }
 
-    @Override
+    //@Override
     public boolean isVanillaAdapter() {
         return false;
     }
@@ -134,8 +135,8 @@ public class AbstractConnectGlassModel implements UnbakedModel, BakedModel, Fabr
         }
     }
 
-    @Override
-    public @Nullable BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    //@Override
+    public @Nullable FabricBlockModelRenderer bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         this.particleSprite = textureGetter.apply(nullSpriteIdentifier);
 
         return this;

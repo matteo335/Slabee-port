@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:flowering_azalea_leaf_slab"
-    }
+    "#": [
+      "slabee:flowering_azalea_leaf_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:flowering_azalea_leaves"
-  }
+  },
+  "show_notification": false
 }

@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:red_stained_glass"
-    }
+    "#": [
+      "minecraft:red_stained_glass"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:red_stained_glass_slab"
-  }
+  },
+  "show_notification": false
 }

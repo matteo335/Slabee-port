@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:cobblestone_vertical_slab"
-    }
+    "#": [
+      "slabee:cobblestone_vertical_slab"
+    ]
   },
   "pattern": [
     "##"
@@ -12,5 +12,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:cobblestone"
-  }
+  },
+  "show_notification": false
 }

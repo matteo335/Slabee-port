@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:crying_obsidian"
-    }
+    "#": [
+      "minecraft:crying_obsidian"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:crying_obsidian_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

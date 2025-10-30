@@ -11,12 +11,17 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.ScheduledTickView;
 
 public class SoulSandSlabBlock extends SlabBlock {
     public static final MapCodec<SoulSandSlabBlock> CODEC = createCodec(SoulSandSlabBlock::new);
     protected static final VoxelShape COLLISION_SHAPE_TOP = Block.createCuboidShape(0.0, 8.0, 0.0, 16.0, 14.0, 16.0);
     protected static final VoxelShape COLLISION_SHAPE_BOTTOM = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 6.0, 16.0);
     private static final int SCHEDULED_TICK_DELAY = 20;
+
+    private static VoxelShape BOTTOM_SHAPE = Block.createColumnShape(16, 0, 8);
+    private static VoxelShape TOP_SHAPE = Block.createColumnShape(16, 8, 16);
+
 
     public MapCodec<SoulSandSlabBlock> getCodec() {
         return CODEC;
@@ -72,12 +77,12 @@ public class SoulSandSlabBlock extends SlabBlock {
         BubbleColumnBlock.update(world, pos.up(), state);
     }
 
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    protected BlockState getStateForNeighborUpdate(BlockState state, ScheduledTickView tickView, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos, Random random) {
         if (direction == Direction.UP && neighborState.isOf(Blocks.WATER)) {
             world.scheduleBlockTick(pos, this, SCHEDULED_TICK_DELAY);
         }
 
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     }
 
     protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {

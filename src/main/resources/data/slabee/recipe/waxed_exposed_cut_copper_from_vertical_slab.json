@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:waxed_exposed_cut_copper_vertical_slab"
-    }
+    "#": [
+       "slabee:waxed_exposed_cut_copper_vertical_slab"
+    ]
   },
   "pattern": [
     "##"
@@ -12,5 +12,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:waxed_exposed_cut_copper"
-  }
+  },
+  "show_notification": false
 }

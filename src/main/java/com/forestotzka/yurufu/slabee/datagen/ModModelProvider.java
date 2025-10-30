@@ -1,13 +1,13 @@
+/*
 package com.forestotzka.yurufu.slabee.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModelGenerator;
 
-public class ModModelProvider extends FabricModelProvider {
-    public ModModelProvider(FabricDataOutput output) {
-        super(output);
+public class ModModelProvider implements ModModelProviderInterface {
+    public ModModelProvider() {
+        super();
     }
 
     @Override
@@ -21,3 +21,4 @@ public class ModModelProvider extends FabricModelProvider {
         //for (Item item : ModBlocks)
     }
 }
+ */

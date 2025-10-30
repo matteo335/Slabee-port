@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:blue_concrete_powder_vertical_slab"
-    }
+    "#": [
+      "slabee:blue_concrete_powder_vertical_slab"
+    ]
   },
   "pattern": [
     "##"
@@ -12,5 +12,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:blue_concrete_powder"
-  }
+  },
+  "show_notification": false
 }

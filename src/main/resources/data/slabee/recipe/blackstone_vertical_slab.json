@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:blackstone"
-    }
+    "#": [
+      "minecraft:blackstone"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:blackstone_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

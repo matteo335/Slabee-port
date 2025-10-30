@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:mangrove_wood"
-    }
+    "#": [
+       "minecraft:mangrove_wood"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:mangrove_wood_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

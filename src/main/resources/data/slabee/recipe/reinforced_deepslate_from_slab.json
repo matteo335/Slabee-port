@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:reinforced_deepslate_slab"
-    }
+    "#": [
+      "slabee:reinforced_deepslate_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:reinforced_deepslate"
-  }
+  },
+  "show_notification": false
 }

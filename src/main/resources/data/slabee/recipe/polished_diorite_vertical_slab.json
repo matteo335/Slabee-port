@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:polished_diorite"
-    }
+    "#": [
+       "minecraft:polished_diorite"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:polished_diorite_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

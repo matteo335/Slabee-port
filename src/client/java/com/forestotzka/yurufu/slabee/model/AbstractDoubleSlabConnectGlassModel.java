@@ -2,27 +2,40 @@ package com.forestotzka.yurufu.slabee.model;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
+//import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.renderer.v1.render.FabricBlockModelRenderer;
+import net.fabricmc.fabric.impl.client.indigo.renderer.render.AbstractRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.model.ModelPartBuilder;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.item.ItemRenderState;
 import net.minecraft.client.render.model.*;
+import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.event.GameEvent;
+
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.renderable.RenderContext;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
+import java.util.logging.LogManager;
 
 import static com.forestotzka.yurufu.slabee.model.NeighborState.*;
 
@@ -41,6 +54,8 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
     protected final int positiveVariantIndex;
     protected final int negativeVariantIndex;
     protected final int axis;
+
+    public static Logger LOGGER = LogManager.getLogManager().getLogger("Slabee - Please report to Matteo35");
 
     protected AbstractDoubleSlabConnectGlassModel(@Nullable Block positiveSlab, @Nullable Block negativeSlab, int axis) {
         this.positiveSlab = positiveSlab;
@@ -137,7 +152,7 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
     protected abstract DoubleSlabType getDoubleSlabType();
 
     @Override
-    public @Nullable BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    public @Nullable FabricBlockModelRenderer bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (this.positiveId != null && SIDE_POSITIVE_MESHES[axis][positiveVariantIndex][0][0] == null) {
             for (int patternIndex = 0; patternIndex < SLAB_PATTERN_COUNT; patternIndex++) {
                 for (Direction dir : Direction.values()) {
@@ -145,12 +160,12 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
                         continue;
                     }
 
-                    MeshBuilder meshBuilder = getBuilder();
-                    QuadEmitter emitter = meshBuilder.getEmitter();
+                    FabricBlockModelRenderer meshBuilder = (FabricBlockModelRenderer) getBuilder();
+                    QuadEmitter emitter = Renderer.get().getLayerRenderStateEmitter((ItemRenderState.LayerRenderState) ItemRenderState.LayerRenderState.DEFAULT);
 
                     emitSidePositiveQuad(emitter, dir, patternIndex, textureGetter);
 
-                    SIDE_POSITIVE_MESHES[axis][positiveVariantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
+                    SIDE_POSITIVE_MESHES[axis][positiveVariantIndex][patternIndex][dir.ordinal()] = (Mesh) ModelPartBuilder.create().build();
                 }
             }
         }
@@ -162,12 +177,12 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
                         continue;
                     }
 
-                    MeshBuilder meshBuilder = getBuilder();
-                    QuadEmitter emitter = meshBuilder.getEmitter();
+                    Mesh meshBuilder = getBuilder();
+                    QuadEmitter emitter = (QuadEmitter) getBuilder();
 
                     emitSideNegativeQuad(emitter, dir, patternIndex, textureGetter);
 
-                    SIDE_NEGATIVE_MESHES[axis][negativeVariantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
+                    SIDE_NEGATIVE_MESHES[axis][negativeVariantIndex][patternIndex][dir.ordinal()] = (Mesh) ModelPartBuilder.create().build();
                 }
             }
         }
@@ -179,15 +194,15 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
                         continue;
                     }
 
-                    MeshBuilder meshBuilder = getBuilder();
-                    QuadEmitter emitter = meshBuilder.getEmitter();
+                    Mesh meshBuilder = getBuilder();
+                    QuadEmitter emitter = (QuadEmitter) getBuilder();
 
                     SpriteIdentifier spriteIdentifier = emitEndPositiveQuad(emitter, dir, patternIndex);
                     emitter.spriteBake(textureGetter.apply(spriteIdentifier), MutableQuadView.BAKE_LOCK_UV);
                     emitter.color(-1, -1, -1, -1);
                     emitter.emit();
 
-                    END_POSITIVE_MESHES[axis][positiveVariantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
+                    END_POSITIVE_MESHES[axis][positiveVariantIndex][patternIndex][dir.ordinal()] = (Mesh) ModelPartBuilder.create().build();
                 }
             }
         }
@@ -199,15 +214,15 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
                         continue;
                     }
 
-                    MeshBuilder meshBuilder = getBuilder();
-                    QuadEmitter emitter = meshBuilder.getEmitter();
+                    Mesh meshBuilder = getBuilder();
+                    QuadEmitter emitter = (QuadEmitter) getBuilder();
 
                     SpriteIdentifier spriteIdentifier = emitEndNegativeQuad(emitter, dir, patternIndex);
                     emitter.spriteBake(textureGetter.apply(spriteIdentifier), MutableQuadView.BAKE_LOCK_UV);
                     emitter.color(-1, -1, -1, -1);
                     emitter.emit();
 
-                    END_NEGATIVE_MESHES[axis][negativeVariantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
+                    END_NEGATIVE_MESHES[axis][negativeVariantIndex][patternIndex][dir.ordinal()] = (Mesh) ModelPartBuilder.create().build();
                 }
             }
         }
@@ -215,10 +230,10 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
         if ((this.positiveId == null) == (this.negativeId == null)) {
             this.particleSprite = textureGetter.apply(nullSpriteIdentifier);
         } else {
-            BakedModel bakedModel = baker.getOrLoadModel(Objects.requireNonNullElse(this.positiveId, this.negativeId)).bake(baker, textureGetter, rotationContainer);
+            BakedGeometry bakedModel = baker.getModel(Objects.requireNonNullElse(this.positiveId, this.negativeId)).bakeGeometry((ModelTextures) baker, (Baker) textureGetter, rotationContainer);
 
             if (bakedModel != null) {
-                this.particleSprite = bakedModel.getParticleSprite();
+                this.particleSprite = getParticleSprite();
             } else {
                 this.particleSprite = textureGetter.apply(nullSpriteIdentifier);
             }
@@ -227,7 +242,7 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
         return this;
     }
 
-    @Override
+    //@Override
     public void emitBlockQuads(BlockRenderView blockRenderView, BlockState blockState, BlockPos blockPos, Supplier<Random> supplier, RenderContext renderContext) {
         NeighborState ns = new NeighborState(blockRenderView, blockPos, positiveSlab, negativeSlab, getDoubleSlabType());
 
@@ -245,20 +260,23 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
                         {
                             Mesh mesh = END_POSITIVE_MESHES[axis][positiveVariantIndex][(isGlassPositive ? GLASS_PATTERN_COUNT : STAINED_GLASS_PATTERN_COUNT) - 1][face.ordinal()];
                             if (mesh != null) {
-                                mesh.outputTo(renderContext.getEmitter());
+                                //mesh.outputTo((QuadEmitter) emitBlockQuads(null, null, null, null, null););
+                                LOGGER.info("AbstractDoubleSlabConnectGlassModel emitBlockQuads contactType END_POSITIVE_MESHES isn't null");
                             }
                         }
 
                         for (int index : getEndPatternIndexes(face, ns, true)) {
                             Mesh mesh = END_POSITIVE_MESHES[axis][positiveVariantIndex][index][face.ordinal()];
                             if (mesh != null) {
-                                mesh.outputTo(renderContext.getEmitter());
+                                //mesh.outputTo(renderContext.getEmitter());
+                                LOGGER.info("AbstractDoubleConnectGlassModel emitBlockQuads index END_POSITIVE_MESHES isn't null");
                             }
                         }
                     } else {
                         Mesh mesh = getHalfEndMeshPositive(ns, contactType);
                         if (mesh != null) {
-                            mesh.outputTo(renderContext.getEmitter());
+                            //mesh.outputTo(renderContext.getEmitter());
+                            LOGGER.info("AbstractDoubleConnectGlassModel emitBlockQuads getHalfEndMeshPositive isn't null");
                         }
                     }
                 } else {
@@ -275,7 +293,7 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
                         mesh = getSideMesh(face, ns, contactType, true);
                     }
                     if (mesh != null) {
-                        mesh.outputTo(renderContext.getEmitter());
+                        mesh.outputTo((QuadEmitter) renderContext.clone());
                     }
                 }
             }
@@ -293,25 +311,25 @@ public abstract class AbstractDoubleSlabConnectGlassModel extends AbstractConnec
                         for (int index : getEndPatternIndexes(face, ns, false)) {
                             Mesh mesh = END_NEGATIVE_MESHES[axis][negativeVariantIndex][index][face.ordinal()];
                             if (mesh != null) {
-                                mesh.outputTo(renderContext.getEmitter());
+                                mesh.outputTo((QuadEmitter) renderContext.getTransform());
                             }
                         }
 
                         Mesh mesh = END_NEGATIVE_MESHES[axis][negativeVariantIndex][(isGlassNegative ? GLASS_PATTERN_COUNT : STAINED_GLASS_PATTERN_COUNT) - 1][face.ordinal()];
                         if (mesh != null) {
-                            mesh.outputTo(renderContext.getEmitter());
+                            mesh.outputTo((QuadEmitter) renderContext.getRenderingHints());
                         }
                     } else {
                         Mesh mesh = getHalfEndMeshNegative(ns, contactType);
                         if (mesh != null) {
-                            mesh.outputTo(renderContext.getEmitter());
+                            mesh.outputTo((QuadEmitter) renderContext.getAreaOfInterest());
                         }
                     }
                 } else {
                     if (!ns.isSameSlab() || contactType == ContactType.NONE) {
                         Mesh mesh = getSideMesh(face, ns, contactType, false);
                         if (mesh != null) {
-                            mesh.outputTo(renderContext.getEmitter());
+                            mesh.outputTo((QuadEmitter) renderContext.getAreaOfInterest());
                         }
                     }
                 }

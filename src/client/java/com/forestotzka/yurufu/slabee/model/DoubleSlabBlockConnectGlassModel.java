@@ -4,16 +4,19 @@ import com.forestotzka.yurufu.slabee.block.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
+//import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.renderer.v1.render.FabricBlockModelRenderer;
 import net.minecraft.block.Block;
-import net.minecraft.client.render.model.BakedModel;
+//import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.Baker;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.minecraft.client.model.ModelPartBuilder;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -119,26 +122,26 @@ public class DoubleSlabBlockConnectGlassModel extends AbstractDoubleSlabConnectG
     }
 
     @Override
-    public @Nullable BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    public @Nullable FabricBlockModelRenderer bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (this.positiveId != null && QUARTER_MESHES[positiveVariantIndex][0][0][0][0] == null) {
             for (int patternIndex = 0; patternIndex < SLAB_PATTERN_COUNT; patternIndex++) {
                 for (Direction dir : Direction.values()) {
                     for (int quarterIndex = 0; quarterIndex < QUARTER_COUNT; quarterIndex++) {
                         {
-                            MeshBuilder meshBuilder = getBuilder();
-                            QuadEmitter emitter = meshBuilder.getEmitter();
+                            Mesh meshBuilder = getBuilder();
+                            QuadEmitter emitter = (QuadEmitter) getBuilder();
 
                             emitSlabQuarterQuad(emitter, dir, patternIndex, quarterIndex, textureGetter);
 
-                            QUARTER_MESHES[positiveVariantIndex][patternIndex][dir.ordinal()][quarterIndex][0] = meshBuilder.build();
+                            QUARTER_MESHES[positiveVariantIndex][patternIndex][dir.ordinal()][quarterIndex][0] = (Mesh) ModelPartBuilder.create().build();
                         }
                         {
-                            MeshBuilder meshBuilder = getBuilder();
-                            QuadEmitter emitter = meshBuilder.getEmitter();
+                            Mesh meshBuilder = getBuilder();
+                            QuadEmitter emitter = (QuadEmitter) getBuilder();
 
                             emitVerticalSlabQuarterQuad(emitter, dir, patternIndex, quarterIndex, textureGetter);
 
-                            QUARTER_MESHES[positiveVariantIndex][patternIndex][dir.ordinal()][quarterIndex][1] = meshBuilder.build();
+                            QUARTER_MESHES[positiveVariantIndex][patternIndex][dir.ordinal()][quarterIndex][1] = (Mesh) ModelPartBuilder.create().build();
                         }
                     }
                 }

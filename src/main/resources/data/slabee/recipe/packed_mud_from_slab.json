@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:packed_mud_slab"
-    }
+    "#": [
+       "slabee:packed_mud_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:packed_mud"
-  }
+  },
+  "show_notification": false
 }

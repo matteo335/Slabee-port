@@ -89,18 +89,4 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
-    /**
-     * バニラではプレイヤーの0.500001下のブロックの情報が参照される
-     * 氷の下付きハーフブロックなどでも滑るように2箇所の情報を取ってmax
-     */
-    @ModifyExpressionValue(
-            method = "travel",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/block/Block;getSlipperiness()F"
-            )
-    )
-    private float wrapSlipperiness(float original) {
-        return SlabeeUtils.getSlipperiness(this.getWorld(), this.getPos(), this.getPosWithYOffset(0.5F), original);
-    }
 }

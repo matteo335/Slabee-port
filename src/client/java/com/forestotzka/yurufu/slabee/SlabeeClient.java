@@ -4,20 +4,25 @@ import com.forestotzka.yurufu.slabee.block.ModBlockEntities;
 import com.forestotzka.yurufu.slabee.block.ModBlocks;
 import com.forestotzka.yurufu.slabee.block.DoubleSlabBlockEntityRenderer;
 import com.forestotzka.yurufu.slabee.block.DoubleVerticalSlabBlockEntityRenderer;
-import com.forestotzka.yurufu.slabee.handler.ModClientHandlers;
+//import com.forestotzka.yurufu.slabee.handler.ModClientHandlers;
 import com.forestotzka.yurufu.slabee.listener.ModClientListeners;
 import com.forestotzka.yurufu.slabee.model.ModModelLoaders;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+//import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.world.BiomeColors;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.biome.FoliageColors;
@@ -51,7 +56,7 @@ public class SlabeeClient implements ClientModInitializer {
             ModBlocks.CHERRY_LEAF_VERTICAL_SLAB,
             ModBlocks.AZALEA_LEAF_VERTICAL_SLAB,
             ModBlocks.FLOWERING_AZALEA_LEAF_VERTICAL_SLAB
-    );
+            );
     private static final List<Block> COLORED_GLASS_SLABS = Arrays.asList(
             ModBlocks.TINTED_GLASS_SLAB,
             ModBlocks.WHITE_STAINED_GLASS_SLAB,
@@ -93,49 +98,52 @@ public class SlabeeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModClientListeners.register();
-        ModClientHandlers.register();
+        //ModClientHandlers.register();
         ModModelLoaders.register();
 
-        LEAF_SLABS.forEach(block -> {
+        //WILL NEED TO BE FIXED IN THE FUTURE
+        /*LEAF_SLABS.forEach(block -> {
             ColorProviderRegistry.BLOCK.register(this::getLeafSlabColor, block);
 
-            ColorProviderRegistry.ITEM.register(((stack, tintIndex) -> {
-                if (stack.isOf(ModBlocks.MANGROVE_LEAF_SLAB.asItem()) || stack.isOf(ModBlocks.MANGROVE_LEAF_VERTICAL_SLAB.asItem())) {
-                    return FoliageColors.getMangroveColor();
+            ColorProviderRegistry.BLOCK.register(((stack, tintIndex) -> {
+                if (stack == ModBlocks.MANGROVE_LEAF_SLAB.asItem() || stack == ModBlocks.MANGROVE_LEAF_VERTICAL_SLAB.asItem()) {
+                    return FoliageColors.MANGROVE;
                 } else if (
-                        stack.isOf(ModBlocks.OAK_LEAF_SLAB.asItem()) ||stack.isOf(ModBlocks.SPRUCE_LEAF_SLAB.asItem()) ||stack.isOf(ModBlocks.BIRCH_LEAF_SLAB.asItem()) || stack.isOf(ModBlocks.JUNGLE_LEAF_SLAB.asItem()) || stack.isOf(ModBlocks.ACACIA_LEAF_SLAB.asItem()) || stack.isOf(ModBlocks.DARK_OAK_LEAF_SLAB.asItem()) ||
-                        stack.isOf(ModBlocks.OAK_LEAF_VERTICAL_SLAB.asItem()) || stack.isOf(ModBlocks.SPRUCE_LEAF_VERTICAL_SLAB.asItem()) ||stack.isOf(ModBlocks.BIRCH_LEAF_VERTICAL_SLAB.asItem()) ||stack.isOf(ModBlocks.JUNGLE_LEAF_VERTICAL_SLAB.asItem()) || stack.isOf(ModBlocks.ACACIA_LEAF_VERTICAL_SLAB.asItem()) || stack.isOf(ModBlocks.DARK_OAK_LEAF_VERTICAL_SLAB.asItem())
+                        stack == (ModBlocks.OAK_LEAF_SLAB.asItem()) ||stack == (ModBlocks.SPRUCE_LEAF_SLAB.asItem()) ||stack == (ModBlocks.BIRCH_LEAF_SLAB.asItem()) || stack == (ModBlocks.JUNGLE_LEAF_SLAB.asItem()) || stack == (ModBlocks.ACACIA_LEAF_SLAB.asItem()) || stack == (ModBlocks.DARK_OAK_LEAF_SLAB.asItem()) ||
+                        stack == ModBlocks.OAK_LEAF_VERTICAL_SLAB.asItem() || stack == ModBlocks.SPRUCE_LEAF_VERTICAL_SLAB.asItem() ||stack == (ModBlocks.BIRCH_LEAF_VERTICAL_SLAB.asItem()) ||stack == (ModBlocks.JUNGLE_LEAF_VERTICAL_SLAB.asItem()) || stack == (ModBlocks.ACACIA_LEAF_VERTICAL_SLAB.asItem()) || stack == (ModBlocks.DARK_OAK_LEAF_VERTICAL_SLAB.asItem())
                 ) {
-                    BlockState state = ((BlockItem)stack.getItem()).getBlock().getDefaultState();
+                    BlockState state = Block.getBlockFromItem(Item.byRawId(1)).getDefaultState(); //Probably not going to work
                     return getLeafSlabColor(state, null, null, tintIndex);
                 } else {
                     return 0xFFFFFF;
                 }
             }), block.asItem());
 
-            BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutoutMipped());
+            BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT);
         });
 
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GLASS_SLAB, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GLASS_VERTICAL_SLAB, RenderLayer.getCutout());
-        COLORED_GLASS_SLABS.forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent()));
+         */
+
+      /*  BlockRenderLayerMap.putBlock(ModBlocks.GLASS_SLAB, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.GLASS_VERTICAL_SLAB, BlockRenderLayer.CUTOUT);
+        COLORED_GLASS_SLABS.forEach(block -> BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT));
 
         ColorProviderRegistry.BLOCK.register(this::getGrassSlabColor, ModBlocks.GRASS_SLAB, ModBlocks.GRASS_VERTICAL_SLAB);
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
-            BlockState state = ((BlockItem)stack.getItem()).getBlock().getDefaultState();
-            return getGrassSlabColor(state, null, null, tintIndex);
+        ColorProviderRegistry.BLOCK.register((stack, world, pos, tintIndex) -> {
+            BlockState state = stack.getBlock().getDefaultState();
+            return getGrassSlabColor(state, null, null, 1);
         }, ModBlocks.GRASS_SLAB, ModBlocks.GRASS_VERTICAL_SLAB);
 
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GRASS_SLAB, RenderLayer.getCutoutMipped());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GRASS_VERTICAL_SLAB, RenderLayer.getCutoutMipped());
+        BlockRenderLayerMap.putBlock(ModBlocks.GRASS_SLAB, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.GRASS_VERTICAL_SLAB, BlockRenderLayer.CUTOUT);
 
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.MANGROVE_ROOT_SLAB, RenderLayer.getCutoutMipped());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.MANGROVE_ROOT_VERTICAL_SLAB, RenderLayer.getCutoutMipped());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DIRT_PATH_SLAB, RenderLayer.getCutoutMipped());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DIRT_PATH_VERTICAL_SLAB, RenderLayer.getCutoutMipped());
+        BlockRenderLayerMap.putBlock(ModBlocks.MANGROVE_ROOT_SLAB, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.MANGROVE_ROOT_VERTICAL_SLAB, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.DIRT_PATH_SLAB, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.DIRT_PATH_VERTICAL_SLAB, BlockRenderLayer.CUTOUT);
 
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DOUBLE_SLAB_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DOUBLE_VERTICAL_SLAB_BLOCK, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.putBlock(ModBlocks.DOUBLE_SLAB_BLOCK, BlockRenderLayer.TRANSLUCENT);
+        BlockRenderLayerMap.putBlock(ModBlocks.DOUBLE_VERTICAL_SLAB_BLOCK, BlockRenderLayer.TRANSLUCENT);
 
         BlockEntityRendererFactories.register(ModBlockEntities.DOUBLE_SLAB_BLOCK_ENTITY, DoubleSlabBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(ModBlockEntities.DOUBLE_VERTICAL_SLAB_BLOCK_ENTITY, DoubleVerticalSlabBlockEntityRenderer::new);
@@ -143,11 +151,11 @@ public class SlabeeClient implements ClientModInitializer {
 
     private int getLeafSlabColor(BlockState state, @Nullable BlockRenderView world, @Nullable BlockPos pos, int tintIndex) {
         if (state.isOf(ModBlocks.SPRUCE_LEAF_SLAB) || state.isOf(ModBlocks.SPRUCE_LEAF_VERTICAL_SLAB)) {
-            return FoliageColors.getSpruceColor();
+            return FoliageColors.SPRUCE;
         } else if (state.isOf(ModBlocks.BIRCH_LEAF_SLAB) || state.isOf(ModBlocks.BIRCH_LEAF_VERTICAL_SLAB)) {
-            return FoliageColors.getBirchColor();
+            return FoliageColors.BIRCH;
         } else if (world == null || pos == null) {
-            return FoliageColors.getDefaultColor();
+            return FoliageColors.DEFAULT;
         } else if (
                 state.isOf(ModBlocks.OAK_LEAF_SLAB) || state.isOf(ModBlocks.JUNGLE_LEAF_SLAB) || state.isOf(ModBlocks.ACACIA_LEAF_SLAB) || state.isOf(ModBlocks.DARK_OAK_LEAF_SLAB) || state.isOf(ModBlocks.MANGROVE_LEAF_SLAB) ||
                 state.isOf(ModBlocks.OAK_LEAF_VERTICAL_SLAB) || state.isOf(ModBlocks.JUNGLE_LEAF_VERTICAL_SLAB) || state.isOf(ModBlocks.ACACIA_LEAF_VERTICAL_SLAB) || state.isOf(ModBlocks.DARK_OAK_LEAF_VERTICAL_SLAB) || state.isOf(ModBlocks.MANGROVE_LEAF_VERTICAL_SLAB)
@@ -164,5 +172,6 @@ public class SlabeeClient implements ClientModInitializer {
         } else {
             return GrassColors.getDefaultColor();
         }
+        */
     }
 }

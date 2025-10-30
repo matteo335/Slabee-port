@@ -10,6 +10,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.ScheduledTickView;
 
 public class MagmaSlabBlock extends SlabBlock {
     public static final MapCodec<MagmaSlabBlock> CODEC = createCodec(MagmaSlabBlock::new);
@@ -25,7 +26,7 @@ public class MagmaSlabBlock extends SlabBlock {
 
     public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         if (!entity.bypassesSteppingEffects() && entity instanceof LivingEntity) {
-            entity.damage(world.getDamageSources().hotFloor(), 1.0F);
+            entity.damage((ServerWorld) world, world.getDamageSources().hotFloor(), 1.0F);
         }
 
         super.onSteppedOn(world, pos, state, entity);
@@ -35,12 +36,12 @@ public class MagmaSlabBlock extends SlabBlock {
         BubbleColumnBlock.update(world, pos.up(), state);
     }
 
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    protected BlockState getStateForNeighborUpdate(BlockState state, ScheduledTickView tickView, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos, Random random) {
         if (direction == Direction.UP && neighborState.isOf(Blocks.WATER)) {
             world.scheduleBlockTick(pos, this, SCHEDULED_TICK_DELAY);
         }
 
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     }
 
     protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {

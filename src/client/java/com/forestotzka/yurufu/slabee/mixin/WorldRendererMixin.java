@@ -32,7 +32,7 @@ public abstract class WorldRendererMixin {
     @Shadow @Nullable private ClientWorld world;
 
     @Inject(method = "drawBlockOutline", at = @At("HEAD"), cancellable = true)
-    private void onDrawBlockOutline(MatrixStack matrices, VertexConsumer vertexConsumer, Entity entity, double cameraX, double cameraY, double cameraZ, BlockPos pos, BlockState state, CallbackInfo ci) {
+    private void onDrawBlockOutline(MatrixStack matrices, VertexConsumer vertexConsumer, Entity entity, double cameraX, double cameraY, double cameraZ, BlockPos pos, BlockState state, int color, CallbackInfo ci) {
         PlayerEntity player = client.player;
         if (player != null && player.isSneaking() && SlabeeUtils.isDoubleSlab(state) && world != null) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -61,8 +61,8 @@ public abstract class WorldRendererMixin {
                 shape = VoxelShapes.fullCube();
             }
 
-            WorldRendererAccessor.drawCuboidShapeOutline(matrices, vertexConsumer, shape, pos.getX() - cameraX, pos.getY() - cameraY, pos.getZ() - cameraZ, 0.0F, 0.0F, 0.0F, 0.4F);
-            ci.cancel();
+            //WorldRendererAccessor.drawCuboidShapeOutline(matrices, vertexConsumer, shape, pos.getX() - cameraX, pos.getY() - cameraY, pos.getZ() - cameraZ, 0.0F, 0.0F, 0.0F, 0.4F);
+            //ci.cancel();
         }
     }
 }

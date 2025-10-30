@@ -15,7 +15,7 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
-        getOrCreateTagBuilder(BlockTags.SLABS)
-                .forceAddTag(ModBlockTags.SLABS);
+        getTagBuilder(BlockTags.SLABS)
+                .addTag(ModBlockTags.SLABS.id());
     }
 }

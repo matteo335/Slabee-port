@@ -22,7 +22,9 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractDoubleSlabBlock extends BlockWithEntity implements BlockEntityProvider {
@@ -91,7 +93,7 @@ public abstract class AbstractDoubleSlabBlock extends BlockWithEntity implements
     @Override
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (state.isIn(BlockTags.GUARDED_BY_PIGLINS)) {
-            PiglinBrain.onGuardedBlockInteracted(player, false);
+            PiglinBrain.onGuardedBlockInteracted((ServerWorld) world, player, false);
         }
 
         world.emitGameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Emitter.of(player, state));
@@ -160,12 +162,12 @@ public abstract class AbstractDoubleSlabBlock extends BlockWithEntity implements
         BubbleColumnBlock.update(world, pos.up(), state);
     }
 
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    protected BlockState getStateForNeighborUpdate(BlockState state, WorldAccess world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
         if (direction == Direction.UP && neighborState.isOf(Blocks.WATER)) {
             world.scheduleBlockTick(pos, this, SCHEDULED_TICK_DELAY);
         }
 
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     }
 
     protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {

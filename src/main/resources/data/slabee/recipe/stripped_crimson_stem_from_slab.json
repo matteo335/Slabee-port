@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:stripped_crimson_stem_slab"
-    }
+    "#": [
+       "slabee:stripped_crimson_stem_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:stripped_crimson_stem"
-  }
+  },
+  "show_notification": false
 }

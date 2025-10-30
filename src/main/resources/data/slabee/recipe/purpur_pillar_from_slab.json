@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:purpur_pillar_slab"
-    }
+    "#": [
+       "slabee:purpur_pillar_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:purpur_pillar"
-  }
+  },
+  "show_notification": false
 }

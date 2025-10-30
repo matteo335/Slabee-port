@@ -8,15 +8,19 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 public class DoubleVerticalSlabBlock extends AbstractDoubleSlabBlock {
@@ -69,7 +73,6 @@ public class DoubleVerticalSlabBlock extends AbstractDoubleSlabBlock {
         return (isX && LookingPositionTracker.lookingAtEasternHalf) || (!isX && LookingPositionTracker.lookingAtSouthernHalf);
     }
 
-    @Override
     protected VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
         boolean isX = state.get(AXIS) == VerticalSlabAxis.X;
         switch (calcCullingShapeType(state)) {
@@ -209,8 +212,7 @@ public class DoubleVerticalSlabBlock extends AbstractDoubleSlabBlock {
         return VoxelShapes.fullCube();
     }
 
-    @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, ScheduledTickView tickView, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos, Random random) {
         if (direction == Direction.UP && !state.canPlaceAt(world, pos)) {
             world.scheduleBlockTick(pos, this, 1);
         }
@@ -227,7 +229,7 @@ public class DoubleVerticalSlabBlock extends AbstractDoubleSlabBlock {
             }
         }
 
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     }
 
     public static boolean canPlaceAt(BlockState state, Direction facing) {
@@ -241,9 +243,9 @@ public class DoubleVerticalSlabBlock extends AbstractDoubleSlabBlock {
             boolean isPositiveSide = SlabeeUtils.isPositiveSide(entity, state.get(AXIS), pos);
 
             if (isPositiveSide && doubleSlabBlockEntity.getPositiveSlabState().isOf(ModBlocks.MAGMA_BLOCK_VERTICAL_SLAB)) {
-                entity.damage(world.getDamageSources().hotFloor(), 1.0F);
+                entity.damage((ServerWorld) world, world.getDamageSources().hotFloor(), 1.0F);
             } else if (!isPositiveSide && doubleSlabBlockEntity.getNegativeSlabState().isOf(ModBlocks.MAGMA_BLOCK_VERTICAL_SLAB)) {
-                entity.damage(world.getDamageSources().hotFloor(), 1.0F);
+                entity.damage((ServerWorld) world, world.getDamageSources().hotFloor(), 1.0F);
             }
         }
 

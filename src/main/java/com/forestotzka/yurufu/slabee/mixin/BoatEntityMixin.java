@@ -21,12 +21,14 @@ public abstract class BoatEntityMixin extends VehicleEntity {
     public BoatEntityMixin(EntityType<?> entityType, World world) {
         super(entityType, world);
     }
-
+/*
     @Redirect(
             method = "getNearbySlipperiness",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/block/BlockState;getCollisionShape(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/shape/VoxelShape;")
     )
+
+ */
     private VoxelShape redirectGetCollisionShape(BlockState state, BlockView world, BlockPos pos) {
         if (state.isOf(ModBlocks.DOUBLE_VERTICAL_SLAB_BLOCK)) {
             // ボートの slipperiness 判定用にだけ fullCube を返す
@@ -39,7 +41,7 @@ public abstract class BoatEntityMixin extends VehicleEntity {
      * バニラではプレイヤーの0.500001下のブロックの情報が参照される
      * 氷の下付きハーフブロックなどでも滑るように2箇所の情報を取ってmax
      */
-    @ModifyExpressionValue(
+  /*  @ModifyExpressionValue(
             method = "getNearbySlipperiness",
             at = @At(
                     value = "INVOKE",
@@ -49,4 +51,6 @@ public abstract class BoatEntityMixin extends VehicleEntity {
     private float wrapSlipperiness(float original) {
         return SlabeeUtils.getSlipperiness(this.getWorld(), this.getPos(), this.getPosWithYOffset(0.5F), original);
     }
+
+   */
 }

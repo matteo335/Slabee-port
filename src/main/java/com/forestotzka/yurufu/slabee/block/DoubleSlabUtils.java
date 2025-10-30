@@ -11,6 +11,7 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -106,10 +107,10 @@ public class DoubleSlabUtils {
     }
 
     private static boolean canHarvest(BlockState state, PlayerEntity player) {
-        ItemStack mainhandItem = player.getInventory().getMainHandStack();
+        DefaultedList<ItemStack> mainhandItem = player.getInventory().getMainStacks();
         if (state.isIn(BlockTags.NEEDS_DIAMOND_TOOL)) {
-            return (mainhandItem.isOf(Items.DIAMOND_PICKAXE) || mainhandItem.isOf(Items.NETHERITE_PICKAXE));
+            return (mainhandItem.equals(Items.DIAMOND_PICKAXE) || mainhandItem.equals(Items.NETHERITE_PICKAXE));
         }
-        return (player.canHarvest(state)) || (mainhandItem.isOf(Items.SHEARS) && state.isIn(ModBlockTags.MINEABLE_SHEARS));
+        return (player.canHarvest(state)) || (mainhandItem.equals(Items.SHEARS) && state.isIn(ModBlockTags.MINEABLE_SHEARS));
     }
 }

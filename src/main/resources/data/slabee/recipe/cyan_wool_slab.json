@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:cyan_wool"
-    }
+    "#": [
+      "minecraft:cyan_wool"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:cyan_wool_slab"
-  }
+  },
+  "show_notification": false
 }

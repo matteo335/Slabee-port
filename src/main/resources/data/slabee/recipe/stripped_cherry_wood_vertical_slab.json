@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:stripped_cherry_wood"
-    }
+    "#": [
+       "minecraft:stripped_cherry_wood"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:stripped_cherry_wood_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

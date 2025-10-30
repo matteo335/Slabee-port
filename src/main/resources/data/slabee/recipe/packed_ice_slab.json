@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:packed_ice"
-    }
+    "#": [
+       "minecraft:packed_ice"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:packed_ice_slab"
-  }
+  },
+  "show_notification": false
 }

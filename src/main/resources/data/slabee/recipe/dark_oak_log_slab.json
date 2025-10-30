@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:dark_oak_log"
-    }
+    "#": [
+      "minecraft:dark_oak_log"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:dark_oak_log_slab"
-  }
+  },
+  "show_notification": false
 }

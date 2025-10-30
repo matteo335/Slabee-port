@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:mushroom_stem"
-    }
+    "#": [
+      "minecraft:mushroom_stem"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:mushroom_stem_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

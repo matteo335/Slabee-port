@@ -11,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 
+import java.util.Optional;
+
 public class DoubleVerticalSlabBlockEntity extends AbstractDoubleSlabBlockEntity {
     private boolean isX = true;
 
@@ -18,9 +20,9 @@ public class DoubleVerticalSlabBlockEntity extends AbstractDoubleSlabBlockEntity
         super(ModBlockEntities.DOUBLE_VERTICAL_SLAB_BLOCK_ENTITY, pos, state, Identifier.of("slabee:purple_concrete_vertical_slab"), Identifier.of("slabee:black_concrete_vertical_slab"));
     }
 
-    @Override
+    //@Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
+        super.createNbt(registryLookup);
 
         if (this.positiveSlabId != null) {
             NbtCompound positiveSlab = new NbtCompound();
@@ -41,28 +43,28 @@ public class DoubleVerticalSlabBlockEntity extends AbstractDoubleSlabBlockEntity
         }
     }
 
-    @Override
+    //@Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+        super.createNbt(registryLookup);
 
         if (nbt.contains("positive_slab")) {
-            NbtCompound positiveSlabData = nbt.getCompound("positive_slab");
-            Identifier i = Identifier.of(positiveSlabData.getString("id"));
+            Optional<NbtCompound> positiveSlabData = nbt.getCompound("positive_slab");
+            Identifier i = Identifier.of(String.valueOf(positiveSlabData.get().getString("id")));
             this.positiveSlabId = isTrueSlabId(i) ? i : defaultPositiveSlabId;
         } else {
             this.positiveSlabId = defaultPositiveSlabId;
         }
 
         if (nbt.contains("negative_slab")) {
-            NbtCompound negativeSlabData = nbt.getCompound("negative_slab");
-            Identifier i = Identifier.of(negativeSlabData.getString("id"));
+            Optional<NbtCompound> negativeSlabData = nbt.getCompound("negative_slab");
+            Identifier i = Identifier.of(String.valueOf(negativeSlabData.get().getString("id")));
             this.negativeSlabId = isTrueSlabId(i) ? i : defaultNegativeSlabId;
         } else {
             this.negativeSlabId = defaultNegativeSlabId;
         }
 
         if (nbt.contains("axis")) {
-            String inputAxis = nbt.getString("axis");
+            String inputAxis = String.valueOf(nbt.getString("axis"));
             if ("X".equals(inputAxis)) {
                 this.isX = true;
             } else if ("Z".equals(inputAxis)) {

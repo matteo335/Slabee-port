@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:spruce_wood"
-    }
+    "#": [
+      "minecraft:spruce_wood"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:spruce_wood_slab"
-  }
+  },
+  "show_notification": false
 }

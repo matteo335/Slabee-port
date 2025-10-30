@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:sculk"
-    }
+    "#": [
+       "minecraft:sculk"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:sculk_slab"
-  }
+  },
+  "show_notification": false
 }

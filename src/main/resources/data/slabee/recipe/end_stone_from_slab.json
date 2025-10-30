@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:end_stone_slab"
-    }
+    "#": [
+      "slabee:end_stone_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:end_stone"
-  }
+  },
+  "show_notification": false
 }

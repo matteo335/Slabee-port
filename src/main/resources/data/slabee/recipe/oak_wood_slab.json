@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:oak_wood"
-    }
+    "#": [
+       "minecraft:oak_wood"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:oak_wood_slab"
-  }
+  },
+  "show_notification": false
 }

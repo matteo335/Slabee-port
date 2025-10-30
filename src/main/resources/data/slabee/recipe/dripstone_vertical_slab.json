@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:dripstone_block"
-    }
+    "#": [
+      "minecraft:dripstone_block"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:dripstone_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

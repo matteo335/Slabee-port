@@ -2,10 +2,10 @@
     "schemaVersion": 1,
     "id": "slabee",
     "version": "${version}",
-    "name": "Slabee",
+    "name": "Slabee Port",
     "description": "This is the ultimate slab block mod - New Slabs, Vertical Slabs, and Mixable Slabs!",
     "authors": [
-        "Yurufu"
+        "Yurufu. Forked by Matteo35"
     ],
     "contact": {},
     "license": "MIT",
@@ -23,7 +23,7 @@
         ]
     },
     "mixins": [
-        "slabee.mixins.json",
+      "slabee.mixins.json",
         {
             "config": "slabee.client.mixins.json",
             "environment": "client"

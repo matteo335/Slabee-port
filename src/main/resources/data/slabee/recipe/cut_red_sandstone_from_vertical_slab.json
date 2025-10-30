@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:cut_red_sandstone_vertical_slab"
-    }
+    "#": [
+      "slabee:cut_red_sandstone_vertical_slab"
+    ]
   },
   "pattern": [
     "##"
@@ -12,5 +12,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:cut_red_sandstone"
-  }
+  },
+  "show_notification": false
 }

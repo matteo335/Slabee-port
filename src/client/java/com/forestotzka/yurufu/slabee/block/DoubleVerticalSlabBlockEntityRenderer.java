@@ -8,6 +8,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 
@@ -23,7 +24,7 @@ public class DoubleVerticalSlabBlockEntityRenderer extends AbstractDoubleSlabBlo
             slabState = slabState.with(SnowyVerticalSlabBlock.SNOWY, world.getBlockState(pos.up()).isIn(BlockTags.SNOW));
         }
 
-        super.renderPositive(renderLayerType, slabState, pos, world, matrices, vertexConsumers, random);
+        //super.renderPositive(renderLayerType, slabState, pos, world, matrices, vertexConsumers, random);
     }
 
     @Override
@@ -32,6 +33,21 @@ public class DoubleVerticalSlabBlockEntityRenderer extends AbstractDoubleSlabBlo
             slabState = slabState.with(SnowyVerticalSlabBlock.SNOWY, world.getBlockState(pos.up()).isIn(BlockTags.SNOW));
         }
 
-        super.renderNegative(renderLayerType, slabState, pos, world, matrices, vertexConsumers, random);
+        //super.renderNegative(renderLayerType, slabState, pos, world, matrices, vertexConsumers, random);
+    }
+
+    @Override
+    public void render(DoubleVerticalSlabBlockEntity entity, float tickProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
+
+    }
+
+    @Override
+    public boolean rendersOutsideBoundingBox() {
+        return super.rendersOutsideBoundingBox();
+    }
+
+    @Override
+    public boolean isInRenderDistance(DoubleVerticalSlabBlockEntity blockEntity, Vec3d pos) {
+        return super.isInRenderDistance(blockEntity, pos);
     }
 }

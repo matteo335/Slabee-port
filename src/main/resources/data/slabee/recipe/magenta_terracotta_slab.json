@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:magenta_terracotta"
-    }
+    "#": [
+       "minecraft:magenta_terracotta"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:magenta_terracotta_slab"
-  }
+  },
+  "show_notification": false
 }

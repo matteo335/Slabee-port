@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:warped_stem_slab"
-    }
+    "#": [
+       "slabee:warped_stem_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:warped_stem"
-  }
+  },
+  "show_notification": false
 }

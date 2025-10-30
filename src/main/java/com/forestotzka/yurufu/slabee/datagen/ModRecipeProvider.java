@@ -4,17 +4,26 @@ import com.forestotzka.yurufu.slabee.block.ModBlocks;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.fabricmc.fabric.api.datagen.v1.recipe.FabricRecipeExporter;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeExporter;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.data.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import static net.minecraft.data.recipe.RecipeGenerator.*;
 
 public class ModRecipeProvider extends FabricRecipeProvider {
     List<Pair<ItemConvertible, ItemConvertible>> slabs = Arrays.asList(
@@ -225,7 +234,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
     );
 
     List<Pair<ItemConvertible, ItemConvertible>> vertical_slabs = Arrays.asList(
-            /*new Pair<>(ModBlocks.OAK_VERTICAL_SLAB, Blocks.OAK_PLANKS),
+            new Pair<>(ModBlocks.OAK_VERTICAL_SLAB, Blocks.OAK_PLANKS),
             new Pair<>(ModBlocks.SPRUCE_VERTICAL_SLAB, Blocks.SPRUCE_PLANKS),
             new Pair<>(ModBlocks.BIRCH_VERTICAL_SLAB, Blocks.BIRCH_PLANKS),
             new Pair<>(ModBlocks.JUNGLE_VERTICAL_SLAB, Blocks.JUNGLE_PLANKS),
@@ -488,7 +497,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
             new Pair<>(ModBlocks.PUMPKIN_VERTICAL_SLAB, Blocks.PUMPKIN),
             new Pair<>(ModBlocks.HAY_VERTICAL_SLAB, Blocks.HAY_BLOCK),
             new Pair<>(ModBlocks.HONEYCOMB_VERTICAL_SLAB, Blocks.HONEYCOMB_BLOCK),
-            new Pair<>(ModBlocks.SCULK_VERTICAL_SLAB, Blocks.SCULK)*/
+            new Pair<>(ModBlocks.SCULK_VERTICAL_SLAB, Blocks.SCULK)
     );
 
     List<Pair<ItemConvertible, ItemConvertible>> vanilla_slabs = Arrays.asList(
@@ -559,11 +568,21 @@ public class ModRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
+    protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registryLookup, RecipeExporter exporter) {
+        return new RecipeGenerator(registryLookup, exporter) {
+            @Override
+            public void generate() {
+                RegistryWrapper.Impl<Item> itemLookup = registries.getOrThrow(RegistryKeys.ITEM);
+            }
+        };
+    }
+
+    //@Override
     public void generate(RecipeExporter exporter) {
-        /*slabs(exporter);
+        slabs(exporter);
         verticalSlabs(exporter);
         combineSlabs(exporter, slabs);
-        combineVerticalSlabs(exporter);*/
+        combineVerticalSlabs(exporter);
         combineSlabs(exporter, vanilla_slabs);
     }
 
@@ -571,10 +590,10 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         for (Pair<ItemConvertible, ItemConvertible> recipe : slabs) {
             ItemConvertible slab = recipe.getFirst();
             ItemConvertible block = recipe.getSecond();
-            ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, slab, 6)
+            ShapedRecipeJsonBuilder.create(null, RecipeCategory.BUILDING_BLOCKS, slab, 6)
                     .pattern("###")
                     .input('#', block)
-                    .criterion(FabricRecipeProvider.hasItem(block), FabricRecipeProvider.conditionsFromItem(block))
+                    .criterion(hasItem(block), conditionsFromPredicates((ItemPredicate.Builder) block))
                     .offerTo(exporter);
         }
     }
@@ -583,12 +602,12 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         for (Pair<ItemConvertible, ItemConvertible> recipe : vertical_slabs) {
             ItemConvertible slab = recipe.getFirst();
             ItemConvertible block = recipe.getSecond();
-            ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, slab, 6)
+            ShapedRecipeJsonBuilder.create(null, RecipeCategory.BUILDING_BLOCKS, slab, 6)
                     .pattern("#")
                     .pattern("#")
                     .pattern("#")
                     .input('#', block)
-                    .criterion(FabricRecipeProvider.hasItem(block), FabricRecipeProvider.conditionsFromItem(block))
+                    .criterion(hasItem(block), conditionsFromPredicates((ItemPredicate.Builder) block))
                     .offerTo(exporter);
         }
     }
@@ -599,12 +618,12 @@ public class ModRecipeProvider extends FabricRecipeProvider {
             ItemConvertible block = recipe.getSecond();
             String filePath = block.toString();
             filePath = filePath.substring((filePath.indexOf(":") + 1), filePath.indexOf("}")) + "_from_slab";
-            ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, block, 1)
+            ShapedRecipeJsonBuilder.create(null, RecipeCategory.BUILDING_BLOCKS, block, 1)
                     .pattern("#")
                     .pattern("#")
                     .input('#', slab)
-                    .criterion(FabricRecipeProvider.hasItem(slab), FabricRecipeProvider.conditionsFromItem(slab))
-                    .offerTo(exporter, Identifier.of("slabee", filePath));
+                    .criterion(hasItem(slab), conditionsFromPredicates((ItemPredicate.Builder) slab))
+                    .offerTo(exporter, String.valueOf(Identifier.of("slabee", filePath)));
         }
     }
 
@@ -614,11 +633,16 @@ public class ModRecipeProvider extends FabricRecipeProvider {
             ItemConvertible block = recipe.getSecond();
             String filePath = block.toString();
             filePath = filePath.substring((filePath.indexOf(":") + 1), filePath.indexOf("}")) + "_from_vertical_slab";
-            ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, block, 1)
+            ShapedRecipeJsonBuilder.create(null, RecipeCategory.BUILDING_BLOCKS, block, 1)
                     .pattern("##")
                     .input('#', slab)
-                    .criterion(FabricRecipeProvider.hasItem(slab), FabricRecipeProvider.conditionsFromItem(slab))
-                    .offerTo(exporter, Identifier.of("slabee", filePath));
+                    .criterion(hasItem(slab), conditionsFromPredicates((ItemPredicate.Builder) slab))
+                    .offerTo(exporter, String.valueOf(Identifier.of("slabee", filePath)));
         }
+    }
+
+    @Override
+    public String getName() {
+        return "Mattéo35";
     }
 }

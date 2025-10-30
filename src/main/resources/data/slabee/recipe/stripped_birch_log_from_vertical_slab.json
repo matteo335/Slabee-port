@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:stripped_birch_log_vertical_slab"
-    }
+    "#": [
+       "slabee:stripped_birch_log_vertical_slab"
+    ]
   },
   "pattern": [
     "##"
@@ -12,5 +12,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:stripped_birch_log"
-  }
+  },
+  "show_notification": false
 }

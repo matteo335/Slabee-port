@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 
 import java.util.Set;
 
-@Environment(EnvType.CLIENT)
+/*@Environment(EnvType.CLIENT)
 public class ParticleRenderHandler {
     public static void register() {
         ParticleRenderEvents.ALLOW_BLOCK_DUST_TINT.register((state, world, pos) -> !UNTINT_BLOCKS.contains(state.getBlock()));
@@ -19,3 +19,4 @@ public class ParticleRenderHandler {
             ModBlocks.GRASS_VERTICAL_SLAB
     );
 }
+*/

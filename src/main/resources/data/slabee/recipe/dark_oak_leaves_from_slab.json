@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:dark_oak_leaf_slab"
-    }
+    "#": [
+      "slabee:dark_oak_leaf_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:dark_oak_leaves"
-  }
+  },
+  "show_notification": false
 }

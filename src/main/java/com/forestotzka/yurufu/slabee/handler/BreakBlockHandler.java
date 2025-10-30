@@ -139,7 +139,7 @@ public class BreakBlockHandler {
     }
 
     private static void dropStack(World world, ItemEntity itemEntity, ItemStack stack) {
-        if (!world.isClient && !stack.isEmpty() && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
+        if (!world.isClient && !stack.isEmpty() && GameRules.DO_TILE_DROPS.equals(true)) {
             itemEntity.setToDefaultPickupDelay();
             world.spawnEntity(itemEntity);
         }

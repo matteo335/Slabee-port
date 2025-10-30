@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:polished_tuff_vertical_slab"
-    }
+    "#": [
+       "slabee:polished_tuff_vertical_slab"
+    ]
   },
   "pattern": [
     "##"
@@ -12,5 +12,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:polished_tuff"
-  }
+  },
+  "show_notification": false
 }

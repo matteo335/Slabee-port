@@ -3,6 +3,7 @@ package com.forestotzka.yurufu.slabee.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.LightBlock;
 import net.minecraft.block.SnowBlock;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
@@ -10,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.chunk.light.ChunkBlockLightProvider;
 import net.minecraft.world.chunk.light.ChunkLightProvider;
 
 public abstract class SpreadableSlabBlock extends SnowySlabBlock{
@@ -25,8 +27,8 @@ public abstract class SpreadableSlabBlock extends SnowySlabBlock{
         } else if (blockState.getFluidState().getLevel() == 8) {
             return false;
         } else {
-            int i = ChunkLightProvider.getRealisticOpacity(world, state, pos, blockState, blockPos, Direction.UP, blockState.getOpacity(world, blockPos));
-            return i < world.getMaxLightLevel();
+            int i = ChunkLightProvider.getRealisticOpacity(state, blockState, Direction.UP, blockState.getOpacity());
+            return i < 15;
         }
     }
 

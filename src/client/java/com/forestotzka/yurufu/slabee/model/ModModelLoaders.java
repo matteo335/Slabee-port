@@ -8,8 +8,13 @@ import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 @Environment(EnvType.CLIENT)
 public class ModModelLoaders {
     public static void register() {
-        Slabee.LOGGER.info("Registering Mod Model Loaders for " + Slabee.MOD_ID);
+        Slabee.LOGGER.info("Registering Mod Model Loaders for " + Slabee.MOD_ID + " -Process modified by Mattéo35");
 
-        ModelLoadingPlugin.register(new DoubleSlabBlockModelLoadingPlugin());
+        ModelLoadingPlugin.register(new DoubleSlabBlockModelLoadingPlugin() {
+            @Override
+            public void initialize(Context context) {
+
+            }
+        });
     }
 }

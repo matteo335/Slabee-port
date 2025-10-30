@@ -1,3 +1,6 @@
 {
-    "parent": "slabee:block/stripped_cherry_wood_slab"
+  "model": {
+    "type": "minecraft:model",
+    "model": "slabee:item/stripped_cherry_wood_slab"
+  }
 }

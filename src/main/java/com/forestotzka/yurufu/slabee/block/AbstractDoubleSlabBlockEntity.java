@@ -166,6 +166,10 @@ public abstract class AbstractDoubleSlabBlockEntity extends BlockEntity {
         updateNegativeSlabState();
     }
 
+    protected abstract void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup);
+
+    public abstract void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup);
+
     protected abstract void updatePositiveSlabState();
     protected abstract void updateNegativeSlabState();
 

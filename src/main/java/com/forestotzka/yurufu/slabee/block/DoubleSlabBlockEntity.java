@@ -13,6 +13,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 
+import java.util.Optional;
+
 public class DoubleSlabBlockEntity extends AbstractDoubleSlabBlockEntity {
     private Direction positiveSlabFacing = Direction.SOUTH;
     private Direction negativeSlabFacing = Direction.SOUTH;
@@ -23,32 +25,32 @@ public class DoubleSlabBlockEntity extends AbstractDoubleSlabBlockEntity {
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
+        super.createNbt(registryLookup);
 
         if (this.positiveSlabId != null) {
             NbtCompound positiveSlab = new NbtCompound();
             positiveSlab.putString("id", this.positiveSlabId.toString());
-            positiveSlab.putString("facing", this.positiveSlabFacing.getName());
+            positiveSlab.putString("facing", this.positiveSlabFacing.name());
             nbt.put("positive_slab", positiveSlab);
         }
 
         if (this.negativeSlabId != null) {
             NbtCompound negativeSlab = new NbtCompound();
             negativeSlab.putString("id", this.negativeSlabId.toString());
-            negativeSlab.putString("facing", this.negativeSlabFacing.getName());
+            negativeSlab.putString("facing", this.negativeSlabFacing.name());
             nbt.put("negative_slab", negativeSlab);
         }
     }
 
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+        super.createNbt(registryLookup);
 
         if (nbt.contains("positive_slab")) {
-            NbtCompound positiveSlabData = nbt.getCompound("positive_slab");
-            Identifier i = Identifier.of(positiveSlabData.getString("id"));
+            Optional<NbtCompound> positiveSlabData = nbt.getCompound("positive_slab");
+            Identifier i = Identifier.of(String.valueOf(positiveSlabData.get().getString("id")));
             this.positiveSlabId = isTrueSlabId(i) ? i : defaultPositiveSlabId;
-            Direction d = Direction.byName(positiveSlabData.getString("facing"));
+            Direction d = Direction.byId(String.valueOf(positiveSlabData.get().getString("facing")));
             this.positiveSlabFacing = (d != null) ? d : Direction.SOUTH;
         } else {
             this.positiveSlabId = defaultPositiveSlabId;
@@ -56,10 +58,10 @@ public class DoubleSlabBlockEntity extends AbstractDoubleSlabBlockEntity {
         }
 
         if (nbt.contains("negative_slab")) {
-            NbtCompound negativeSlabData = nbt.getCompound("negative_slab");
-            Identifier i = Identifier.of(negativeSlabData.getString("id"));
+            Optional<NbtCompound> negativeSlabData = nbt.getCompound("negative_slab");
+            Identifier i = Identifier.of(String.valueOf(negativeSlabData.get().getString("id")));
             this.negativeSlabId = isTrueSlabId(i) ? (i.equals(Identifier.of(Slabee.MOD_ID, "dirt_path_slab")) ? Identifier.of(Slabee.MOD_ID, "dirt_slab") : i) : defaultNegativeSlabId;
-            Direction d = Direction.byName(negativeSlabData.getString("facing"));
+            Direction d = Direction.byId(String.valueOf(negativeSlabData.get().getString("facing")));
             this.negativeSlabFacing = (d != null) ? d : Direction.SOUTH;
         } else {
             this.negativeSlabId = defaultNegativeSlabId;

@@ -11,7 +11,9 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.ScheduledTickView;
 
 public class SnowySlabBlock extends SlabBlock {
     public static final MapCodec<SnowySlabBlock> CODEC = createCodec(SnowySlabBlock::new);
@@ -27,12 +29,12 @@ public class SnowySlabBlock extends SlabBlock {
         this.setDefaultState(this.getDefaultState().with(SNOWY, false));
     }
 
-    @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    //@Override
+    protected BlockState getStateForNeighborUpdate(BlockState state, ScheduledTickView tickView, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos, Random random) {
         if (direction == Direction.UP) {
             state = state.with(SNOWY, isSnow(neighborState));
         }
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override

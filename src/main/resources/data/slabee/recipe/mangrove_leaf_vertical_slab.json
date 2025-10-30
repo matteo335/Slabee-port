@@ -1,15 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "building",
-  "key": {
-    "#": {
-      "item": "minecraft:mangrove_leaves"
-    }
-  },
+  "key": { "m": [ "minecraft:mangrove_leaves" ] },
+
   "pattern": [
-    "#",
-    "#",
-    "#"
+    "m",
+    "m",
+    "m"
   ],
   "result": {
     "count": 6,

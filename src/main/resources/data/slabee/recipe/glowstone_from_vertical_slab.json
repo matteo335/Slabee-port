@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:glowstone_vertical_slab"
-    }
+    "#": [
+      "slabee:glowstone_vertical_slab"
+    ]
   },
   "pattern": [
     "##"
@@ -12,5 +12,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:glowstone"
-  }
+  },
+  "show_notification": false
 }

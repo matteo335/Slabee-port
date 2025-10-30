@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:mossy_cobblestone"
-    }
+    "#": [
+       "minecraft:mossy_cobblestone"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:mossy_cobblestone_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:brown_mushroom"
-    }
+    "#": [
+      "minecraft:brown_mushroom"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:brown_mushroom_slab"
-  }
+  },
+  "show_notification": false
 }

@@ -8,7 +8,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.minecraft.block.*;
 import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.util.ModelIdentifier;
+//import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -17,23 +17,23 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Environment(EnvType.CLIENT)
-public class DoubleSlabBlockModelLoadingPlugin implements ModelLoadingPlugin {
+public abstract class DoubleSlabBlockModelLoadingPlugin implements ModelLoadingPlugin {
     record SlabVariantKey(Block positiveSlab, Block negativeSlab, int axis) {}
 
     private static final Map<SlabVariantKey, UnbakedModel> MODEL_CACHE = new ConcurrentHashMap<>();
 
-    @Override
+    //@Override
     public void onInitializeModelLoader(Context context) {
         context.modifyModelOnLoad().register((original, ctx) -> {
-            final ModelIdentifier id = ctx.topLevelId();
+            final Identifier id = ctx.id();
             if (id == null) {
                 return original;
             }
 
-            Identifier i = id.id();
+            Identifier i = id;
 
             if (i.equals(Identifier.of(Slabee.MOD_ID, "double_slab_block"))) {
-                String[] ss = id.getVariant().split(",");
+                String[] ss = new String[]{String.valueOf(id.compareTo(Identifier.of(",")))};
                 Block parsedPositiveSlab = null;
                 Block parsedNegativeSlab = null;
 
@@ -58,7 +58,7 @@ public class DoubleSlabBlockModelLoadingPlugin implements ModelLoadingPlugin {
                     }
                 });
             } else if (i.equals(Identifier.of(Slabee.MOD_ID, "double_vertical_slab_block"))) {
-                String[] ss = id.getVariant().split(",");
+                String[] ss = id.toUnderscoreSeparatedString().split(",");
                 Block parsedPositiveSlab = null;
                 Block parsedNegativeSlab = null;
                 boolean parsedIsX = false;
@@ -93,32 +93,32 @@ public class DoubleSlabBlockModelLoadingPlugin implements ModelLoadingPlugin {
             return original;
         });
 
-        context.modifyModelBeforeBake().register((original, ctx) -> {
-            final ModelIdentifier id = ctx.topLevelId();
+        context.modifyBlockModelBeforeBake().register((original, ctx) -> {
+            final Identifier id = Identifier.of(ctx.toString());
             if (id == null) {
                 return original;
             }
 
-            Identifier i = id.id();
+            Identifier i = id;
 
-            if (id.getVariant().equals("inventory")) {
+            if (id.toUnderscoreSeparatedString().equals("inventory")) {
                 return original;
             }
 
             Block b = Registries.BLOCK.get(i);
             if (isGlassFamily(b)) {
-                return ModConfig.INSTANCE.connectGlassTextures
-                        ? new TranslucentBlockConnectGlassModel(b)
-                        : new TranslucentBlockModel(b);
+                //return ModConfig.INSTANCE.connectGlassTextures
+                        //? new TranslucentBlockConnectGlassModel(b)
+                        //: new TranslucentBlockModel(b);
             } else if (b instanceof TranslucentSlabBlock) {
-                String[] ss = id.getVariant().split(",");
+                String[] ss = id.toUnderscoreSeparatedString().split(",");
 
                 for (String s : ss) {
                     String[] keyValue = s.split("=");
                     if (keyValue[0].equals("type")) {
                         if (keyValue[1].equals("top")) {
                             SlabVariantKey key = new SlabVariantKey(b, null, 0);
-                            return MODEL_CACHE.computeIfAbsent(key, k -> {
+                            return (net.minecraft.client.render.model.BlockStateModel.UnbakedGrouped) MODEL_CACHE.computeIfAbsent(key, k -> {
                                 if (ModConfig.INSTANCE.connectGlassTextures && isGlassSlabFamily(b)) {
                                     return new DoubleSlabBlockConnectGlassModel(b, null);
                                 } else {
@@ -127,7 +127,7 @@ public class DoubleSlabBlockModelLoadingPlugin implements ModelLoadingPlugin {
                             });
                         } else if (keyValue[1].equals("bottom")) {
                             SlabVariantKey key = new SlabVariantKey(null, b, 0);
-                            return MODEL_CACHE.computeIfAbsent(key, k -> {
+                            return (net.minecraft.client.render.model.BlockStateModel.UnbakedGrouped) MODEL_CACHE.computeIfAbsent(key, k -> {
                                 if (ModConfig.INSTANCE.connectGlassTextures && isGlassSlabFamily(b)) {
                                     return new DoubleSlabBlockConnectGlassModel(null, b);
                                 } else {
@@ -140,7 +140,7 @@ public class DoubleSlabBlockModelLoadingPlugin implements ModelLoadingPlugin {
                     }
                 }
             } else if (b instanceof TranslucentVerticalSlabBlock) {
-                String[] ss = id.getVariant().split(",");
+                String[] ss = id.toUnderscoreSeparatedString().split(",");
 
                 for (String s : ss) {
                     String[] keyValue = s.split("=");
@@ -148,28 +148,28 @@ public class DoubleSlabBlockModelLoadingPlugin implements ModelLoadingPlugin {
                         switch (keyValue[1]) {
                             case "east" -> {
                                 SlabVariantKey key = new SlabVariantKey(b, null, 1);
-                                return MODEL_CACHE.computeIfAbsent(key, k ->
+                                return (net.minecraft.client.render.model.BlockStateModel.UnbakedGrouped) MODEL_CACHE.computeIfAbsent(key, k ->
                                         ModConfig.INSTANCE.connectGlassTextures && isGlassVerticalSlabFamily(b)
                                         ? new DoubleVerticalSlabBlockConnectGlassModelX(b, null)
                                         : new DoubleVerticalSlabBlockModel(b, null, true));
                             }
                             case "south" -> {
                                 SlabVariantKey key = new SlabVariantKey(b, null, 2);
-                                return MODEL_CACHE.computeIfAbsent(key, k ->
+                                return (net.minecraft.client.render.model.BlockStateModel.UnbakedGrouped) MODEL_CACHE.computeIfAbsent(key, k ->
                                 ModConfig.INSTANCE.connectGlassTextures && isGlassVerticalSlabFamily(b)
                                 ? new DoubleVerticalSlabBlockConnectGlassModelZ(b, null)
                                 : new DoubleVerticalSlabBlockModel(b, null, false));
                             }
                             case "west" -> {
                                 SlabVariantKey key = new SlabVariantKey(null, b, 1);
-                                return MODEL_CACHE.computeIfAbsent(key, k ->
+                                return (net.minecraft.client.render.model.BlockStateModel.UnbakedGrouped) MODEL_CACHE.computeIfAbsent(key, k ->
                                 ModConfig.INSTANCE.connectGlassTextures && isGlassVerticalSlabFamily(b)
                                 ? new DoubleVerticalSlabBlockConnectGlassModelX(null, b)
                                 : new DoubleVerticalSlabBlockModel(null, b, true));
                             }
                             case "north" -> {
                                 SlabVariantKey key = new SlabVariantKey(null, b, 2);
-                                return MODEL_CACHE.computeIfAbsent(key, k ->
+                                return (net.minecraft.client.render.model.BlockStateModel.UnbakedGrouped) MODEL_CACHE.computeIfAbsent(key, k ->
                                 ModConfig.INSTANCE.connectGlassTextures && isGlassVerticalSlabFamily(b)
                                 ? new DoubleVerticalSlabBlockConnectGlassModelZ(null, b)
                                 : new DoubleVerticalSlabBlockModel(null, b, false));

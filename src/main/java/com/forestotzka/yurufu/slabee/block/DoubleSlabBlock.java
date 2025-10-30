@@ -6,13 +6,16 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 public class DoubleSlabBlock extends AbstractDoubleSlabBlock {
@@ -38,7 +41,6 @@ public class DoubleSlabBlock extends AbstractDoubleSlabBlock {
         return LookingPositionTracker.lookingAtUpperHalf;
     }
 
-    @Override
     protected VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
         return switch (calcCullingShapeType(state)) {
             case FULL -> VoxelShapes.fullCube();
@@ -101,8 +103,7 @@ public class DoubleSlabBlock extends AbstractDoubleSlabBlock {
         return VoxelShapes.fullCube();
     }
 
-    @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    protected BlockState getStateForNeighborUpdate(BlockState state, ScheduledTickView tickView, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos, Random random) {
         if (world.getBlockEntity(pos) instanceof DoubleSlabBlockEntity entity) {
             if (entity.getPositiveSlabState().isOf(ModBlocks.DIRT_PATH_SLAB)) {
                 if (direction == Direction.UP && !canPlaceAt(world.getBlockState(pos.up()))) {
@@ -111,7 +112,7 @@ public class DoubleSlabBlock extends AbstractDoubleSlabBlock {
             }
         }
 
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     }
 
     public static boolean canPlaceAt(BlockState state) {
@@ -123,7 +124,7 @@ public class DoubleSlabBlock extends AbstractDoubleSlabBlock {
 
         if (blockEntity instanceof AbstractDoubleSlabBlockEntity doubleSlabBlockEntity && !entity.bypassesSteppingEffects() && entity instanceof LivingEntity) {
             if (doubleSlabBlockEntity.getPositiveSlabState().isOf(ModBlocks.MAGMA_BLOCK_SLAB)) {
-                entity.damage(world.getDamageSources().hotFloor(), 1.0F);
+                entity.damage((ServerWorld) world, world.getDamageSources().hotFloor(), 1.0F);
             }
         }
 

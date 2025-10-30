@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:prismarine_slab"
-    }
+    "#": [
+       "minecraft:prismarine_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:prismarine"
-  }
+  },
+  "show_notification": false
 }

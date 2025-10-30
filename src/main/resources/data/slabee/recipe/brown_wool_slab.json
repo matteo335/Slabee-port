@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:brown_wool"
-    }
+    "#": [
+      "minecraft:brown_wool"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:brown_wool_slab"
-  }
+  },
+  "show_notification": false
 }

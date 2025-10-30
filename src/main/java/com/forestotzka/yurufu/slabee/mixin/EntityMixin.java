@@ -88,17 +88,17 @@ public abstract class EntityMixin {
         this.playSound(blockSoundGroup.getStepSound(), blockSoundGroup.getVolume() * 0.15F, blockSoundGroup.getPitch());
         ci.cancel();
     }
-
+/*
     @Inject(
             method = "spawnSprintingParticles",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"
+                    target = "Lnet/minecraft/entity/Entity;addParticle(Lnet/minecraft/particle/BlockStateParticleEffect;)V"
             ),
             cancellable = true,
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
-    private void spawnSprintingParticles(CallbackInfo ci, BlockPos blockPos, BlockState blockState, Vec3d vec3d, BlockPos blockPos2, double d, double e) {
+    public void spawnSprintingParticles(BlockState state) {
         if (SlabeeUtils.isDoubleSlab(blockState)) {
             BlockState particleState;
 
@@ -114,8 +114,8 @@ public abstract class EntityMixin {
                 }
             }
 
-            this.getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, particleState), d, this.getY() + 0.1, e, vec3d.x * -4.0, 1.5, vec3d.z * -4.0);
+            this.getWorld().addParticleClient(new BlockStateParticleEffect(ParticleTypes.BLOCK, particleState), d, this.getY() + 0.1, e, vec3d.x * -4.0, 1.5, vec3d.z * -4.0);
             ci.cancel();
         }
-    }
+    }*/
 }

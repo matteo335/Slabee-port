@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:orange_wool"
-    }
+    "#": [
+       "minecraft:orange_wool"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:orange_wool_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

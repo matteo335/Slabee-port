@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class BlockItemMixin {
     @Shadow
     protected abstract SoundEvent getPlaceSound(BlockState state);
-
+    /*
     @Inject(
             method = "place(Lnet/minecraft/item/ItemPlacementContext;)Lnet/minecraft/util/ActionResult;",
             at = @At(
@@ -39,7 +39,7 @@ public abstract class BlockItemMixin {
             BlockState trueBlockState = ((BlockItem) itemStack.getItem()).getBlock().getDefaultState();
             BlockSoundGroup trueBlockSoundGroup = trueBlockState.getSoundGroup();
 
-            world.playSound(playerEntity, blockPos, this.getPlaceSound(trueBlockState), SoundCategory.BLOCKS, (trueBlockSoundGroup.getVolume() + 1.0F) / 2.0F, trueBlockSoundGroup.getPitch() * 0.8F);
+            //world.playSound(playerEntity, blockPos, this.getPlaceSound(trueBlockState), SoundCategory.BLOCKS, (trueBlockSoundGroup.getVolume() + 1.0F) / 2.0F, trueBlockSoundGroup.getPitch() * 0.8F);
             world.emitGameEvent(GameEvent.BLOCK_PLACE, blockPos, GameEvent.Emitter.of(playerEntity, trueBlockState));
             itemStack.decrementUnlessCreative(1, playerEntity);
 
@@ -47,6 +47,7 @@ public abstract class BlockItemMixin {
             cir.cancel();
         }
     }
+     */
 
     @Inject(method = "place(Lnet/minecraft/item/ItemPlacementContext;Lnet/minecraft/block/BlockState;)Z", at = @At("HEAD"), cancellable = true)
     private void placeDoubleSlab(ItemPlacementContext ctx, BlockState state, CallbackInfoReturnable<Boolean> cir) {

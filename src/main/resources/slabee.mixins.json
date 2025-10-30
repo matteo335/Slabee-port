@@ -1,26 +1,11 @@
 {
-    "required": true,
-    "minVersion": "0.8",
-    "package": "com.forestotzka.yurufu.slabee.mixin",
-    "compatibilityLevel": "JAVA_21",
-    "mixins": [
-        "BlockItemMixin",
-        "BlockMixin",
-        "BoatEntityMixin",
-        "BubbleColumnBlockInvoker",
-        "BubbleColumnBlockMixin",
-        "ChunkLightProviderMixin",
-        "EntityMixin",
-        "ExperienceOrbEntityMixin",
-        "FlyingEntityMixin",
-        "ItemEntityMixin",
-        "LivingEntityMixin",
-        "ServerPlayerInteractionManagerMixin",
-        "ShovelItemMixin",
-        "SlabBlockMixin",
-        "SnowBlockMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    }
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.forestotzka.yurufu.slabee.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

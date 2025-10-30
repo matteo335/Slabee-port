@@ -3,36 +3,45 @@ package com.forestotzka.yurufu.slabee.model;
 import com.forestotzka.yurufu.slabee.block.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+//import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockModelPart;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockModels;
+import net.fabricmc.fabric.api.renderer.v1.render.FabricBlockModelRenderer;
+//import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
+import net.minecraft.block.entity.StructureBoxRendering;
 import net.minecraft.block.enums.SlabType;
+import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelOverrideList;
+//import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.renderable.RenderContext;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
-public class TranslucentSlabBlockModel implements UnbakedModel, BakedModel, FabricBakedModel {
+public class TranslucentSlabBlockModel implements UnbakedModel, FabricBlockModels, FabricBlockModelRenderer {
     private final Identifier id;
     private final Block block;
     private final boolean isTop;
-    private BakedModel bakedModel;
+    private FabricBlockModels bakedModel;
 
     public TranslucentSlabBlockModel(Block block, boolean isTop) {
         this.block = block;
@@ -46,78 +55,78 @@ public class TranslucentSlabBlockModel implements UnbakedModel, BakedModel, Fabr
             this.id = Identifier.of(id.getNamespace(), "block/" + id.getPath());
         }
     }
-    @Override
+    //@Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
         return List.of();
     }
 
-    @Override
+    //@Override
     public boolean useAmbientOcclusion() {
         return true;
     }
 
-    @Override
+    //@Override
     public boolean hasDepth() {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean isSideLit() {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean isBuiltin() {
         return false;
     }
 
-    @Override
-    public Sprite getParticleSprite() {
-        return bakedModel.getParticleSprite();
+    //@Override
+    public Sprite getParticleSprite(BlockState state, BlockRenderView view, BlockPos pos) {
+        return bakedModel.getModelParticleSprite(state, view, pos);
     }
 
-    @Override
+    //@Override
     public ModelTransformation getTransformation() {
         return null;
     }
 
-    @Override
-    public ModelOverrideList getOverrides() {
+    //@Override
+    public FabricBlockModelPart getOverrides() {
         return null;
     }
 
-    @Override
+    //@Override
     public Collection<Identifier> getModelDependencies() {
         return List.of();
     }
 
-    @Override
+    //@Override
     public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
 
     }
 
-    @Override
+    //@Override
     public boolean isVanillaAdapter() {
         return false;
     }
 
-    @Override
-    public @Nullable BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
-        UnbakedModel unbakedModel = baker.getOrLoadModel(this.id);
-        this.bakedModel = unbakedModel.bake(baker, textureGetter, rotationContainer);
+    //@Override
+    public @Nullable FabricBlockModelRenderer bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+        UnbakedModel unbakedModel = baker.getModel(this.id).getModel();
+        this.bakedModel = (FabricBlockModels) unbakedModel.geometry();
 
         return this;
     }
 
-    @Override
+    //@Override
     public void emitBlockQuads(BlockRenderView blockRenderView, BlockState blockState, BlockPos blockPos, Supplier<Random> supplier, RenderContext renderContext) {
-        renderContext.pushTransform(quad -> {
-            Direction face = quad.cullFace();
+        //renderContext.pushTransform(quad -> {
+            //Direction face = quad.cullFace();
 
-            return face != null && !shouldCull(face, blockRenderView, blockPos);
-        });
-        bakedModel.emitBlockQuads(blockRenderView, blockState, blockPos, supplier, renderContext);
-        renderContext.popTransform();
+            //return face != null && !shouldCull(face, blockRenderView, blockPos);
+        //});
+        bakedModel.getModelParticleSprite(blockState, blockRenderView, blockPos);
+        renderContext.setTransform(AffineTransform.getRotateInstance(1));
     }
 
     private boolean shouldCull(Direction face, BlockRenderView world, BlockPos pos) {

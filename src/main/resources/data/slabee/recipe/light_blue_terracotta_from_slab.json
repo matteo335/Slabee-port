@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:light_blue_terracotta_slab"
-    }
+    "#": [
+       "slabee:light_blue_terracotta_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:light_blue_terracotta"
-  }
+  },
+  "show_notification": false
 }

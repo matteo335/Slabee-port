@@ -28,4 +28,7 @@ public class TintedGlassSlabBlock extends TransparentSlabBlock {
     protected boolean hasSidedTransparency(BlockState state) {
         return true;
     }
+
 }
+
+

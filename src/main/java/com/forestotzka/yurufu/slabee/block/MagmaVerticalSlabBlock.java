@@ -12,6 +12,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.ScheduledTickView;
 
 public class MagmaVerticalSlabBlock extends VerticalSlabBlock {
     public static final MapCodec<MagmaVerticalSlabBlock> CODEC = createCodec(MagmaVerticalSlabBlock::new);
@@ -20,14 +21,13 @@ public class MagmaVerticalSlabBlock extends VerticalSlabBlock {
     public MapCodec<MagmaVerticalSlabBlock> getCodec() {
         return CODEC;
     }
-
     public MagmaVerticalSlabBlock(Settings settings) {
         super(settings);
     }
 
     public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         if (!entity.bypassesSteppingEffects() && entity instanceof LivingEntity) {
-            entity.damage(world.getDamageSources().hotFloor(), 1.0F);
+            entity.damage((ServerWorld) world, world.getDamageSources().hotFloor(), 1.0F);
         }
 
         super.onSteppedOn(world, pos, state, entity);
@@ -37,12 +37,12 @@ public class MagmaVerticalSlabBlock extends VerticalSlabBlock {
         BubbleColumnBlock.update(world, pos.up(), state);
     }
 
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, ScheduledTickView tickView, Random random, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (direction == Direction.UP && neighborState.isOf(Blocks.WATER)) {
             world.scheduleBlockTick(pos, this, SCHEDULED_TICK_DELAY);
         }
 
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     }
 
     protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {

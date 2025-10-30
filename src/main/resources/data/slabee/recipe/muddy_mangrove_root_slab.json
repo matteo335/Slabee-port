@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:muddy_mangrove_roots"
-    }
+    "#": [
+      "minecraft:muddy_mangrove_roots"
+    ]
   },
   "pattern": [
     "###"
@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "id": "slabee:muddy_mangrove_root_slab"
-  }
+  },
+  "show_notification": false
 }

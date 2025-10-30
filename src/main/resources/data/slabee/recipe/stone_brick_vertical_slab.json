@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:stone_bricks"
-    }
+    "#": [
+       "minecraft:stone_bricks"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:stone_brick_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

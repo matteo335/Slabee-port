@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:gilded_blackstone_slab"
-    }
+    "#": [
+      "slabee:gilded_blackstone_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:gilded_blackstone"
-  }
+  },
+  "show_notification": false
 }

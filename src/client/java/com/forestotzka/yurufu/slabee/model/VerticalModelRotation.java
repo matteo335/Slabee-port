@@ -17,7 +17,7 @@ public class VerticalModelRotation implements ModelBakeSettings {
         return rotation;
     }
 
-    @Override
+    //@Override
     public boolean isUvLocked() {
         return uvLocked;
     }

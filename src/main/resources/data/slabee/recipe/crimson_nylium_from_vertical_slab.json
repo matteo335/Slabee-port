@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:crimson_nylium_vertical_slab"
-    }
+    "#": [
+      "slabee:crimson_nylium_vertical_slab"
+    ]
   },
   "pattern": [
     "##"
@@ -12,5 +12,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:crimson_nylium"
-  }
+  },
+  "show_notification": false
 }

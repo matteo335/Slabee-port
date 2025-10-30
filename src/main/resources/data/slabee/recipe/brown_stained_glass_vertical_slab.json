@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:brown_stained_glass"
-    }
+    "#": [
+      "minecraft:brown_stained_glass"
+    ]
   },
   "pattern": [
     "#",
@@ -14,5 +14,6 @@
   "result": {
     "count": 6,
     "id": "slabee:brown_stained_glass_vertical_slab"
-  }
+  },
+  "show_notification": false
 }

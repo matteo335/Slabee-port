@@ -4,10 +4,12 @@ import com.forestotzka.yurufu.slabee.block.ModBlockMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
+//import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+//import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockModels;
+import net.fabricmc.fabric.api.renderer.v1.render.FabricBlockModelRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,10 +21,12 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.image.renderable.RenderContext;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -35,7 +39,7 @@ public class TranslucentBlockConnectGlassModel extends AbstractConnectGlassModel
     private final Identifier id;
     private final Block block;
 
-    private static final SpriteIdentifier nullSpriteIdentifier = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, Identifier.ofVanilla("block/stone"));
+    private static final SpriteIdentifier nullSpriteIdentifier = new SpriteIdentifier(PlayerScreenHandler.EMPTY_HELMET_SLOT_TEXTURE, Identifier.ofVanilla("block/stone"));
 
     protected final boolean isGlass;
 
@@ -53,11 +57,11 @@ public class TranslucentBlockConnectGlassModel extends AbstractConnectGlassModel
     }
 
     @Override
-    public @Nullable BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    public @Nullable FabricBlockModelRenderer bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         for (int patternIndex = 0; patternIndex < (isGlass ? GLASS_PATTERN_COUNT : STAINED_GLASS_PATTERN_COUNT); patternIndex++) {
             for (Direction dir : Direction.values()) {
-                MeshBuilder meshBuilder = getBuilder();
-                QuadEmitter emitter = meshBuilder.getEmitter();
+                Mesh meshBuilder = getBuilder();
+                QuadEmitter emitter = (QuadEmitter) getBuilder();
 
                 if (isGlass) {
                     squareEndQuad(emitter, dir, patternIndex / 5, 0f);
@@ -69,21 +73,21 @@ public class TranslucentBlockConnectGlassModel extends AbstractConnectGlassModel
                 emitter.emit();
 
                 switch (dir) {
-                    case UP    -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_POSITIVE_MESHES[0][variantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
-                    case DOWN  -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_NEGATIVE_MESHES[0][variantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
-                    case EAST  -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_POSITIVE_MESHES[1][variantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
-                    case WEST  -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_NEGATIVE_MESHES[1][variantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
-                    case SOUTH -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_POSITIVE_MESHES[2][variantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
-                    case NORTH -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_NEGATIVE_MESHES[2][variantIndex][patternIndex][dir.ordinal()] = meshBuilder.build();
+                    case UP    -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_POSITIVE_MESHES[0][variantIndex][patternIndex][dir.ordinal()] = getBuilder();
+                    case DOWN  -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_NEGATIVE_MESHES[0][variantIndex][patternIndex][dir.ordinal()] = getBuilder();
+                    case EAST  -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_POSITIVE_MESHES[1][variantIndex][patternIndex][dir.ordinal()] = getBuilder();
+                    case WEST  -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_NEGATIVE_MESHES[1][variantIndex][patternIndex][dir.ordinal()] = getBuilder();
+                    case SOUTH -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_POSITIVE_MESHES[2][variantIndex][patternIndex][dir.ordinal()] = getBuilder();
+                    case NORTH -> END_MESHES[variantIndex][patternIndex][dir.ordinal()] = END_NEGATIVE_MESHES[2][variantIndex][patternIndex][dir.ordinal()] = getBuilder();
                 }
             }
         }
 
         if (this.id != null) {
-            BakedModel bakedModel = baker.getOrLoadModel(this.id).bake(baker, textureGetter, rotationContainer);
+            FabricBlockModelRenderer bakedModel = (FabricBlockModelRenderer) baker.getModel(this.id).bakeGeometry((ModelTextures) baker, (Baker) textureGetter, rotationContainer);
 
             if (bakedModel != null) {
-                this.particleSprite = bakedModel.getParticleSprite();
+                this.particleSprite = getParticleSprite();
             } else {
                 this.particleSprite = textureGetter.apply(nullSpriteIdentifier);
             }
@@ -94,7 +98,7 @@ public class TranslucentBlockConnectGlassModel extends AbstractConnectGlassModel
         return this;
     }
 
-    @Override
+    //@Override
     public void emitBlockQuads(BlockRenderView blockRenderView, BlockState blockState, BlockPos blockPos, Supplier<Random> supplier, RenderContext renderContext) {
         Block slab = ModBlockMap.originalToSlab(block);
         NeighborState ns = new NeighborState(blockRenderView, blockPos, slab, slab, DoubleSlabType.DOUBLE_SLAB);
@@ -110,18 +114,18 @@ public class TranslucentBlockConnectGlassModel extends AbstractConnectGlassModel
                     for (int index : getPatternIndexes(face, ns)) {
                         Mesh mesh = END_MESHES[variantIndex][index][face.ordinal()];
                         if (mesh != null) {
-                            mesh.outputTo(renderContext.getEmitter());
+                            mesh.outputTo((QuadEmitter) getQuads(blockState, Direction.getFacing(Vec3d.unpackRgb(1)), Random.create()));
                         }
                     }
 
                     Mesh mesh = END_MESHES[variantIndex][(isGlass ? GLASS_PATTERN_COUNT : STAINED_GLASS_PATTERN_COUNT) - 1][face.ordinal()];
                     if (mesh != null) {
-                        mesh.outputTo(renderContext.getEmitter());
+                        mesh.outputTo((QuadEmitter) getQuads(blockState, Direction.getFacing(Vec3d.unpackRgb(1)), Random.create()));
                     }
                 } else {
                     Mesh mesh = getHalfEndMesh(ns, contactType, face, variantIndex);
                     if (mesh != null) {
-                        mesh.outputTo(renderContext.getEmitter());
+                        mesh.outputTo((QuadEmitter) getQuads(blockState, Direction.getFacing(Vec3d.unpackRgb(1)), Random.create()));
                     }
                 }
             }

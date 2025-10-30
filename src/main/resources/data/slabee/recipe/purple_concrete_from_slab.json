@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "slabee:purple_concrete_slab"
-    }
+    "#": [
+       "slabee:purple_concrete_slab"
+    ]
   },
   "pattern": [
     "#",
@@ -13,5 +13,6 @@
   "result": {
     "count": 1,
     "id": "minecraft:purple_concrete"
-  }
+  },
+  "show_notification": false
 }

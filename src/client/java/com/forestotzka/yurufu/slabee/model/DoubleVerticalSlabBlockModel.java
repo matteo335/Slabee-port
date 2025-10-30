@@ -4,40 +4,51 @@ import com.forestotzka.yurufu.slabee.block.*;
 import com.forestotzka.yurufu.slabee.block.enums.VerticalSlabAxis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+//import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+//import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockModelPart;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockModels;
+import net.fabricmc.fabric.api.renderer.v1.render.FabricBlockModelRenderer;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelOverrideList;
+//import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.registry.Registries;
+import net.minecraft.resource.OverlayResourcePack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.renderable.RenderContext;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 @Environment(EnvType.CLIENT)
-public class DoubleVerticalSlabBlockModel implements UnbakedModel, BakedModel, FabricBakedModel {
+public class DoubleVerticalSlabBlockModel implements UnbakedModel, FabricBlockModels, FabricBlockModelRenderer {
     private final Identifier positiveId;
     private final Identifier negativeId;
     private final Block positiveSlab;
     private final Block negativeSlab;
     private final boolean isX;
-    private BakedModel positiveBakedModel;
-    private BakedModel negativeBakedModel;
-    private BakedModel nullBakedModel;
+    private FabricBlockModels positiveBakedModel;
+    private FabricBlockModels negativeBakedModel;
+    private FabricBlockModels nullBakedModel;
 
     private final VerticalModelRotation Y0 = new VerticalModelRotation(ModelRotation.X0_Y0.getRotation(), true);
     private final VerticalModelRotation Y90 = new VerticalModelRotation(ModelRotation.X0_Y90.getRotation(), true);
@@ -74,106 +85,109 @@ public class DoubleVerticalSlabBlockModel implements UnbakedModel, BakedModel, F
         }
     }
 
-    @Override
+    //@Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
         return List.of();
     }
 
-    @Override
+    //@Override
     public boolean useAmbientOcclusion() {
         return true;
     }
 
-    @Override
+    //@Override
     public boolean hasDepth() {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean isSideLit() {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean isBuiltin() {
         return false;
     }
 
-    @Override
-    public Sprite getParticleSprite() {
+    //@Override
+    public Sprite getParticleSprite(BlockState state, BlockRenderView view, BlockPos pos) {
         if (positiveId != null) {
-            return positiveBakedModel.getParticleSprite();
+            return positiveBakedModel.getModelParticleSprite(state, view, pos);
         } else if (negativeId != null) {
-            return negativeBakedModel.getParticleSprite();
+            return negativeBakedModel.getModelParticleSprite(state, view, pos);
         } else {
-            return nullBakedModel.getParticleSprite();
+            return nullBakedModel.getModelParticleSprite(state, view, pos);
         }
     }
 
-    @Override
+    //@Override
     public ModelTransformation getTransformation() {
         return null;
     }
 
-    @Override
-    public ModelOverrideList getOverrides() {
+    //@Override
+    public OverlayResourcePack getOverrides() {
         return null;
     }
 
-    @Override
+    //@Override
     public Collection<Identifier> getModelDependencies() {
         return List.of();
     }
 
-    @Override
+    //@Override
     public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
 
     }
 
-    @Override
+    //@Override
     public boolean isVanillaAdapter() {
         return false;
     }
 
-    @Override
-    public @Nullable BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    //@Override
+    public @Nullable FabricBlockModels bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (this.positiveId != null) {
-            UnbakedModel positiveUnbakedModel = baker.getOrLoadModel(this.positiveId);
-            this.positiveBakedModel = positiveUnbakedModel.bake(baker, textureGetter, isX ? Y180 : Y270);
+            UnbakedModel positiveUnbakedModel = baker.getModel(this.positiveId).getModel();
+            this.positiveBakedModel = (FabricBlockModels) positiveUnbakedModel.geometry();
         }
 
         if (this.negativeId != null) {
-            UnbakedModel negativeUnbakedModel = baker.getOrLoadModel(this.negativeId);
-            this.negativeBakedModel = negativeUnbakedModel.bake(baker, textureGetter, isX ? Y0 : Y90);
+            UnbakedModel negativeUnbakedModel = (UnbakedModel) baker.getModel(this.negativeId).bakeGeometry((ModelTextures) textureGetter, baker, (ModelBakeSettings) AbstractBlock.Settings.create());
+            this.negativeBakedModel = (FabricBlockModels) negativeUnbakedModel;
         } else if (this.positiveId == null) {
-            this.nullBakedModel = baker.getOrLoadModel(Identifier.of("minecraft:block/stone")).bake(baker, textureGetter, rotationContainer);
+            this.nullBakedModel = (FabricBlockModels) baker.getModel(Identifier.of("minecraft:block/stone")).bakeGeometry((ModelTextures) baker, (Baker) textureGetter, rotationContainer);
         }
 
         return this;
     }
 
-    @Override
+    public static Logger LOGGER = LogManager.getLogManager().getLogger("Slabee - Please report to Matteo35");
+
+    //@Override
     public void emitBlockQuads(BlockRenderView blockRenderView, BlockState blockState, BlockPos blockPos, Supplier<Random> supplier, RenderContext renderContext) {
         if (this.positiveId != null) {
-            renderContext.pushTransform(quad -> {
-                Direction face = quad.cullFace();
+           // renderContext(quad -> {
+                //Direction face = quad.cullFace();
 
-                return this.positiveSlab == null || face != null && !shouldCullPositive(face, blockRenderView, blockPos);
-            });
+                //return this.positiveSlab == null || face != null && !shouldCullPositive(face, blockRenderView, blockPos);
+            LOGGER.info("DoubleVerticalSlabBlockModel emitBlockQuads this.positiveId isn't null");
+            //});
 
-            positiveBakedModel.emitBlockQuads(blockRenderView, blockState, blockPos, supplier, renderContext);
-            renderContext.popTransform();
+            //positiveBakedModel;
+            renderContext.preConcatenateTransform((AffineTransform) positiveBakedModel);
         }
 
         if (this.negativeId != null) {
-            renderContext.pushTransform(quad -> {
+            /*renderContext.pushTransform(quad -> {
                 Direction face = quad.cullFace();
 
                 return this.negativeSlab == null || face != null && !shouldCullNegative(face, blockRenderView, blockPos);
-            });
+            });*/
 
-            negativeBakedModel.emitBlockQuads(blockRenderView, blockState, blockPos, supplier, renderContext);
-            renderContext.popTransform();
+            //negativeBakedModel.emitBlockQuads(blockRenderView, blockState, blockPos, supplier, renderContext);
+            renderContext.getTransform();
         }
     }
 
